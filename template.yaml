@@ -3,28 +3,54 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   cloud-trader
 
-  Sample SAM Template for cloud-trader
+  App that enables interaction with capital.com API for viewing market information, 
+  execute trade transactions and develop automated trading strategies.
+
+  IMPORTANT: This template/app assumes you have created the following Parameter Store parameters on aws with correct values:
+  - /cloud-trader/capitalDemoUrl  -> Type STRING
+  - /cloud-trader/identifier      -> Type STRING
+  - /cloud-trader/key             -> Type SECURESTRING
+  - /cloud-trader/password        -> Type SECURESTRING
   
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 3
+    Runtime: nodejs18.x
+    Timeout: 15
+    MemorySize: 128
+    Architectures:
+      - x86_64
+    Layers:
+      - TODO
+    Environment:
+      Variables:
+        TODO: TODO
 
 Resources:
-  HelloWorldFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  ############################################################################  ->  State Machines
+
+
+  ############################################################################  ->  Lambda Functions
+  GetCapitalSession:
+    Type: AWS::Serverless::Function
     Properties:
-      CodeUri: hello-world/
-      Handler: app.lambdaHandler
-      Runtime: nodejs18.x
-      Architectures:
-        - x86_64
-      Events:
-        HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /hello
-            Method: get
+      CodeUri: functions/capital/start-session/
+      Handler: startSession.handler
+      # Events:
+      #   HelloWorld:
+      #     Type: HttpApi 
+      #     Properties:
+      #       Path: /hello
+      #       Method: get
+
+
+
+
+
+
+
+
+
+
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

@@ -1,0 +1,14 @@
+{
+  "name": "start-session",
+  "version": "1.0.0",
+  "description": "Starts a session with capital.com api",
+  "main": "startSession.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Burabari Kpai",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.427.0"
+  }
+}

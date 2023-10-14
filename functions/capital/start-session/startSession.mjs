@@ -1,3 +1,4 @@
+/*global fetch*/
 import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm';
 
 

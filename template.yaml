@@ -19,11 +19,11 @@ Globals:
     MemorySize: 128
     Architectures:
       - x86_64
-    Layers:
-      - TODO
-    Environment:
-      Variables:
-        TODO: TODO
+    # Layers:
+    #   - TODO
+    # Environment:
+    #   Variables:
+    #     TODO: TODO
 
 Resources:
   ############################################################################  ->  State Machines
@@ -35,6 +35,8 @@ Resources:
     Properties:
       CodeUri: functions/capital/start-session/
       Handler: startSession.handler
+      Policies: 
+        - !Ref ReadParameterStoreValues
       # Events:
       #   HelloWorld:
       #     Type: HttpApi 
@@ -42,3 +44,19 @@ Resources:
       #       Path: /hello
       #       Method: get
 
+
+######################################################## --> ROLE/POLICY FOR LAMBDA FN TO USE PARAMETER STORE
+  ReadParameterStoreValues:       #--> Using explicit Policy definition. There is no standard Connector
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      # PolicyName: ReadParameterStoreValues
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - ssm:GetParameters
+              - ssm:GetParameter
+              - ssm:GetParametersByPath
+              # - ssm:PutParameter
+            Resource: '*'

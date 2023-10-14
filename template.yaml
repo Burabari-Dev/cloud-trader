@@ -33,6 +33,7 @@ Resources:
   StartCapitalSession:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: StartCapitalSessionFn
       CodeUri: functions/capital/start-session/
       Handler: startSession.handler
       Policies: 

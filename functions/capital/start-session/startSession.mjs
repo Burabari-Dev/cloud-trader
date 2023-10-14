@@ -1,5 +1,6 @@
 import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm';
 
+
 // Configure the SSMClient to use eu-west-2 region
 const client = new SSMClient({ region: 'eu-west-2' });
 
@@ -23,14 +24,46 @@ const baseUrlCommand = new GetParameterCommand({
 
 const ENDPOINT = '/session';
 
+
+/**
+ * This AWS Lambda function retrieves necessary parameters from AWS SSM Parameter Store,
+ * constructs a session URL, and initiates a session with Capital.com API using the obtained credentials.
+ *
+ * @param {Object} event - AWS Lambda event object.
+ * @returns {Object} - Returns an object containing CST (Client Session Token) and TOKEN (Security Token)
+ *                   if the session is successfully started, or an error response otherwise.
+ */
 export const handler = async (event) => {
-  // Run the commands and extract parameter values
+  // Run the commands and retrieve parameter store values
   const { Parameter: { Value: IDENTIFIER } } = await client.send(identifierCommand);
   const { Parameter: { Value: KEY } } = await client.send(keyCommand);
   const { Parameter: { Value: PASSWORD } } = await client.send(passwordCommand);
   const { Parameter: { Value: BASE_URL } } = await client.send(baseUrlCommand);
 
   const url = BASE_URL + ENDPOINT;
+
+  return doStartSession(url, KEY, IDENTIFIER, PASSWORD);
+
+}
+
+
+/**
+ * Initiates a session with the Capital.com API using the provided credentials.
+ *
+ * @param {string} url - The API endpoint URL for starting the session.
+ * @param {string} KEY - API key for authentication.
+ * @param {string} IDENTIFIER - User identifier (e.g., email address).
+ * @param {string} PASSWORD - User password.
+ * @returns {Object} - Returns an object containing CST (Client Session Token) and TOKEN (Security Token)
+ *                   if the session is successfully started, or an error response otherwise.
+ */
+export const doStartSession = async (
+  url = "http://endpoint.com",
+  KEY = "DEMO-KEY",
+  IDENTIFIER = "name@email.com",
+  PASSWORD = "abc-123-!"
+) => {
+
   const headers = {
     'X-CAP-API-KEY': KEY,
     'Content-Type': 'application/json'
@@ -47,32 +80,33 @@ export const handler = async (event) => {
       body: JSON.stringify(postBody)
     });
 
-    if (!response.ok) {
-      //-> Capital.com returns error responses in json format eg: {"errorCode": "error.null.api.key"}
-      const errCode = await response.json();  
+    if (response.status >= 400 && response.status < 500) {
+      //-> Capital.com returns error responses in json format eg: {"errorCode": "error.invalid.details"}
+      const errCode = await response.json();
       return {
-        'statusCode': 200,
-        'body': { 
-          message: `
-            Error getting session from capital.com 
-            Capital.com Error Code: ${errCode.errorCode}
-            ` }
+        message: `
+          Error getting session from capital.com
+          Capital.com Error Code: ${errCode?.errorCode}
+        `
       }
     }
 
     const CST = response.headers.get('CST');
     const TOKEN = response.headers.get('X-SECURITY-TOKEN');
 
-    return {
-      'statusCode': 200,
-      'body': {
+    return JSON.stringify({
         CST: CST,
         TOKEN: TOKEN
-      }
-    }
+    })
   } catch (err) {   // TODO: Check better way of handling this error.
-    console.log(err);
-    return err;
+    // console.log(err);
+    return {
+      message: `
+      Could not fetch with the following parameters: 
+        -> X-CAP-API-KEY: ${KEY}
+        -> IDENTIFIER: ${IDENTIFIER}
+        -> PASSWORD: ****** given password.
+      `
+      };
   }
-
 }

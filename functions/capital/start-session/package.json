@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "description": "Starts a session with capital.com api",
   "main": "startSession.mjs",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive './**/*.test.mjs'"
   },
   "author": "Burabari Kpai",
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.427.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "sinon": "^16.1.0"
   }
 }

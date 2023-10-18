@@ -2,7 +2,6 @@
   "name": "aws-services",
   "version": "1.0.0",
   "description": "Implementation of the AWS services used by Cloud-Trader app",
-  "main": "index.mjs",
   "scripts": {
     "test": "mocha --recursive './**/*.test.mjs'"
   },

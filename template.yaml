@@ -15,7 +15,7 @@ Description: >
 Globals:
   Function:
     Runtime: nodejs18.x
-    Timeout: 15
+    Timeout: 15             # TODO: Check if reduced time between 3 to 5 seconds would be sufficient.
     MemorySize: 128
     Architectures:
       - x86_64

@@ -1,0 +1,13 @@
+{
+  "name": "aws-services",
+  "version": "1.0.0",
+  "description": "Implementation of the AWS services used by Cloud-Trader app",
+  "scripts": {
+    "test": "mocha --recursive './**/*.test.mjs'"
+  },
+  "author": "Burabari Kpai",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.430.0"
+  }
+}

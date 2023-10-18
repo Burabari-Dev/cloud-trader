@@ -1,28 +1,5 @@
 /*global fetch*/
-import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm';
-
-
-// Configure the SSMClient to use eu-west-2 region
-const client = new SSMClient({ region: 'eu-west-2' });
-
-// Generate the commands to get necessary parameters from Parameter Store
-const identifierCommand = new GetParameterCommand({
-  Name: '/cloud-trader/identifier',
-  WithDecryption: false
-});
-const keyCommand = new GetParameterCommand({
-  Name: '/cloud-trader/key',
-  WithDecryption: true
-});
-const passwordCommand = new GetParameterCommand({
-  Name: '/cloud-trader/password',
-  WithDecryption: true
-});
-const baseUrlCommand = new GetParameterCommand({
-  Name: '/cloud-trader/capitalDemoUrl',
-  WithDecryption: false
-});
-
+const isAWS = process.env.AWS_EXECUTION_ENV;
 const ENDPOINT = '/session';
 
 
@@ -35,16 +12,19 @@ const ENDPOINT = '/session';
  *                   if the session is successfully started, or an error response otherwise.
  */
 export const handler = async (event) => {
+  const { getParameter } = isAWS
+  ? await import('../../opt/parameterStore.mjs') 
+  : await import('../../../layers/aws-services/parameterStore.mjs');
+  
   // Run the commands and retrieve parameter store values
-  const { Parameter: { Value: IDENTIFIER } } = await client.send(identifierCommand);
-  const { Parameter: { Value: KEY } } = await client.send(keyCommand);
-  const { Parameter: { Value: PASSWORD } } = await client.send(passwordCommand);
-  const { Parameter: { Value: BASE_URL } } = await client.send(baseUrlCommand);
+  const IDENTIFIER = await getParameter('/cloud-trader/identifier', false);
+  const KEY = await getParameter('/cloud-trader/key', true);
+  const PASSWORD = await getParameter('/cloud-trader/password', true);
+  const BASE_URL = await getParameter('/cloud-trader/capitalDemoUrl', false);
 
   const url = BASE_URL + ENDPOINT;
 
   return doStartSession(url, KEY, IDENTIFIER, PASSWORD);
-
 }
 
 
@@ -96,8 +76,8 @@ export const doStartSession = async (
     const TOKEN = response.headers.get('X-SECURITY-TOKEN');
 
     return JSON.stringify({
-        CST: CST,
-        TOKEN: TOKEN
+      CST: CST,
+      TOKEN: TOKEN
     })
   } catch (err) {   // TODO: Check better way of handling this error.
     // console.log(err);
@@ -108,6 +88,6 @@ export const doStartSession = async (
         -> IDENTIFIER: ${IDENTIFIER}
         -> PASSWORD: ****** given password.
       `
-      };
+    };
   }
 }

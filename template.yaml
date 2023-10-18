@@ -19,8 +19,8 @@ Globals:
     MemorySize: 128
     Architectures:
       - x86_64
-    # Layers:
-    #   - TODO
+    Layers:
+      - !Ref AWSServicesLayer
     # Environment:
     #   Variables:
     #     TODO: TODO

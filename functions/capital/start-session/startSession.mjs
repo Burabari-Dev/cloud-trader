@@ -1,28 +1,38 @@
 /*global fetch*/
 const isAWS = process.env.AWS_EXECUTION_ENV;
-const ENDPOINT = '/session';
+const CT_IDENTIFIER = process.env.CT_IDENTIFIER;
+const CT_KEY = process.env.CT_KEY;
+const CT_PASSWORD = process.env.CT_PASSWORD;
+const CT_DEMO_URL = process.env.CT_DEMO_URL;
+const SESSION_ENDPOINT = process.env.SESSION_ENDPOINT;
 
 
 /**
  * This AWS Lambda function retrieves necessary parameters from AWS SSM Parameter Store,
  * constructs a session URL, and initiates a session with Capital.com API using the obtained credentials.
- *
- * @param {Object} event - AWS Lambda event object.
- * @returns {Object} - Returns an object containing CST (Client Session Token) and TOKEN (Security Token)
- *                   if the session is successfully started, or an error response otherwise.
- */
+*
+* @param {Object} event - AWS Lambda event object.
+* @returns {Object} - Returns an object containing CST (Client Session Token) and TOKEN (Security Token)
+*                   if the session is successfully started, or an error response otherwise.
+*/
 export const handler = async (event) => {
   const { getParameter } = isAWS
-  ? await import('../../opt/parameterStore.mjs') 
+  ? await import('../../opt/parameterStore.js') 
   : await import('../../../layers/aws-services/parameterStore.mjs');
   
-  // Run the commands and retrieve parameter store values
-  const IDENTIFIER = await getParameter('/cloud-trader/identifier', false);
-  const KEY = await getParameter('/cloud-trader/key', true);
-  const PASSWORD = await getParameter('/cloud-trader/password', true);
-  const BASE_URL = await getParameter('/cloud-trader/capitalDemoUrl', false);
+  // const common = isAWS
+  // ? await import('../../opt/common.js') 
+  // : await import('../../../layers/common/common.js');
+  
+  // const ENDPOINT = common.SESSION_ENDPOINT;
 
-  const url = BASE_URL + ENDPOINT;
+  // Run the commands and retrieve parameter store values
+  const IDENTIFIER = await getParameter(CT_IDENTIFIER, false);
+  const KEY = await getParameter(CT_KEY, true);
+  const PASSWORD = await getParameter(CT_PASSWORD, true);
+  const BASE_URL = await getParameter(CT_DEMO_URL, false);
+
+  const url = BASE_URL + SESSION_ENDPOINT;
 
   return doStartSession(url, KEY, IDENTIFIER, PASSWORD);
 }

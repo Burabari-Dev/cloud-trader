@@ -15,6 +15,7 @@ export const handler = async (event) => {
   const { getParameter } = isAWS
   ? await import('../../opt/parameterStore.mjs') 
   : await import('../../../layers/aws-services/parameterStore.mjs');
+  
   // Run the commands and retrieve parameter store values
   const IDENTIFIER = await getParameter('/cloud-trader/identifier', false);
   const KEY = await getParameter('/cloud-trader/key', true);

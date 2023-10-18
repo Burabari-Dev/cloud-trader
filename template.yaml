@@ -46,7 +46,7 @@ Resources:
       #       Method: get
 
 
-######################################################## --> ROLE/POLICY FOR LAMBDA FN TO USE PARAMETER STORE
+############################################################################  ->  Role/Policy for Lambda fn to use
   ReadParameterStoreValues:       #--> Using explicit Policy definition. There is no standard Connector
     Type: AWS::IAM::ManagedPolicy
     Properties:
@@ -61,3 +61,23 @@ Resources:
               - ssm:GetParametersByPath
               # - ssm:PutParameter
             Resource: '*'
+
+
+  ############################################################################  ->  Layers
+  AWSServicesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: AWSServicesLayer
+      Description: All AWS services used by Cloud-Trader app.
+      ContentUri: './layers/aws-services'
+      CompatibleRuntimes:
+        - nodejs18.x
+
+  # CommonLayer:
+  #   Type: AWS::Serverless::LayerVersion
+  #   Properties:
+  #     LayerName: CommonLayer
+  #     Description: Shared OR Common variables and helper functions.
+  #     ContentUri: './layers/common'
+  #     CompatibleRuntimes:
+  #       - nodejs18.x

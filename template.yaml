@@ -21,6 +21,7 @@ Globals:
       - x86_64
     Layers:
       - !Ref AWSServicesLayer
+      - !Ref CommonLayer
     # Environment:
     #   Variables:
     #     TODO: TODO
@@ -73,11 +74,11 @@ Resources:
       CompatibleRuntimes:
         - nodejs18.x
 
-  # CommonLayer:
-  #   Type: AWS::Serverless::LayerVersion
-  #   Properties:
-  #     LayerName: CommonLayer
-  #     Description: Shared OR Common variables and helper functions.
-  #     ContentUri: './layers/common'
-  #     CompatibleRuntimes:
-  #       - nodejs18.x
+  CommonLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: CommonLayer
+      Description: Shared OR Common variables and helper functions.
+      ContentUri: './layers/common'
+      CompatibleRuntimes:
+        - nodejs18.x

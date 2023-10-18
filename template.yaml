@@ -50,7 +50,7 @@ Resources:
   ReadParameterStoreValues:       #--> Using explicit Policy definition. There is no standard Connector
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      # PolicyName: ReadParameterStoreValues
+      ManagedPolicyName: ReadParameterStoreValues      
       PolicyDocument:
         Version: '2012-10-17'
         Statement:

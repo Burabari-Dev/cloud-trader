@@ -17,7 +17,7 @@ const SESSION_ENDPOINT = process.env.SESSION_ENDPOINT;
 */
 export const handler = async (event) => {
   const { getParameter } = isAWS
-  ? await import('../../opt/parameterStore.js') 
+  ? await import('../../opt/parameterStore.mjs') 
   : await import('../../../layers/aws-services/parameterStore.mjs');
   
   // const common = isAWS

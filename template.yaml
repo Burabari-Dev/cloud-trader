@@ -21,9 +21,14 @@ Globals:
       - x86_64
     Layers:
       - !Ref AWSServicesLayer
-    # Environment:
-    #   Variables:
-    #     TODO: TODO
+      - !Ref CommonLayer
+    Environment:
+      Variables:
+        CT_IDENTIFIER: /cloud-trader/identifier         # TODO: Each user would persist as account settings in DB
+        CT_KEY: /cloud-trader/key                       # TODO: Each user would persist as account settings in DB
+        CT_PASSWORD: /cloud-trader/password             # TODO: Each user would persist as account settings in DB
+        CT_DEMO_URL: /cloud-trader/capitalDemoUrl       # TODO: Each user would persist as account settings in DB
+        SESSION_ENDPOINT: /session
 
 Resources:
   ############################################################################  ->  State Machines
@@ -73,11 +78,11 @@ Resources:
       CompatibleRuntimes:
         - nodejs18.x
 
-  # CommonLayer:
-  #   Type: AWS::Serverless::LayerVersion
-  #   Properties:
-  #     LayerName: CommonLayer
-  #     Description: Shared OR Common variables and helper functions.
-  #     ContentUri: './layers/common'
-  #     CompatibleRuntimes:
-  #       - nodejs18.x
+  CommonLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: CommonLayer
+      Description: Shared OR Common variables and helper functions.
+      ContentUri: './layers/common'
+      CompatibleRuntimes:
+        - nodejs18.x

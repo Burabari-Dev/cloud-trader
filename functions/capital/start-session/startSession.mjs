@@ -1,4 +1,7 @@
 /*global fetch*/
+// import { getParameter } from '../../opt/parameterStore.mjs';
+// import { getParameter } from '../../../layers/aws-services/parameterStore.mjs';
+
 const isAWS = process.env.AWS_EXECUTION_ENV;
 const CT_IDENTIFIER = process.env.CT_IDENTIFIER;
 const CT_KEY = process.env.CT_KEY;

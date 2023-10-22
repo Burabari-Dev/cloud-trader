@@ -5,15 +5,16 @@ const REGION = process.env.AWS_REGION;
 const client = new DynamoDBClient({ region: REGION });
 const docClient = DynamoDBDocumentClient.from(client);
 
-export const newRecord = async (tableName = 'demoTable', item = {}) => {
+export const newOrReplaceRecord = async (tableName = 'demoTable', item = {}) => {
   const command = new PutCommand({
     TableName: tableName,
     Item: item,
+    ReturnValues: 'ALL_NEW',
     ReturnConsumedCapacity: 'TOTAL'
   });
 
   const response = await docClient.send(command);
-  return response;
+  return response.Attributes;
 }
 
 export const updateRecord = async (tableName = 'demoTable', itemKey = {}, updateAttributes = {}) => {
@@ -27,7 +28,7 @@ export const updateRecord = async (tableName = 'demoTable', itemKey = {}, update
   });
 
   const response = await docClient.send(command);
-  return response;
+  return response.Attributes;
 }
 
 export const getRecord = async (tableName = 'demoTable', itemKey = {}) => {
@@ -38,7 +39,7 @@ export const getRecord = async (tableName = 'demoTable', itemKey = {}) => {
   })
 
   const response = await docClient.send(command);
-  return response;
+  return response.Item;
 }
 
 export const deleteRecord = async (tableName = 'demoTable', itemKey = {}) => {

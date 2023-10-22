@@ -11,7 +11,8 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.433.0",
     "@aws-sdk/client-ssm": "^3.430.0",
-    "@aws-sdk/lib-dynamodb": "^3.433.0"
+    "@aws-sdk/lib-dynamodb": "^3.433.0",
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "chai": "^4.3.10",

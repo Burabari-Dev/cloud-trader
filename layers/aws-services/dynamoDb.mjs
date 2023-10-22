@@ -55,18 +55,18 @@ export const deleteRecord = async (tableName = 'demoTable', itemKey = {}) => {
 
 ////////////////////////////////////////////////////////////////////////////  -> Helper Functions
 
-const genUpdateExpression = (updateAttributes = {}) => {
+export const genUpdateExpression = (updateAttributes = {}) => {
   const keys = Object.keys(updateAttributes);
   const initialValue = 'set ';
-  const result = keys.reduce((accumulator, currentValue) => {
-    return accumulator + `${currentValue} = :${currentValue}, `;
+  const result = keys.reduce((accumulator, currentValue, index) => {
+    return accumulator + `${currentValue} = :${currentValue}${keys.length > index + 1 ? ', ' : ''}`;
   }, initialValue);
   return result;
 }
 
-const genExpressionAttributeValues = (updateAttributes = {}) => {
+export const genExpressionAttributeValues = (updateAttributes = {}) => {
   let expressionAttributeValues = {};
-  for ([key, value] of Object.entries(updateAttributes)) {
+  for (let [key, value] of Object.entries(updateAttributes)) {
     expressionAttributeValues[`:${key}`] = value;
   }
   return expressionAttributeValues;

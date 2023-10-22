@@ -1,5 +1,5 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 
 const REGION = process.env.AWS_REGION;
 const client = new DynamoDBClient({ region: REGION });
@@ -32,6 +32,17 @@ export const updateRecord = async (tableName = 'demoTable', itemKey = {}, update
 
 export const getRecord = async (tableName = 'demoTable', itemKey = {}) => {
   const command = new GetCommand({
+    TableName: tableName,
+    Key: itemKey,
+    ReturnConsumedCapacity: 'TOTAL'
+  })
+
+  const response = await docClient.send(command);
+  return response;
+}
+
+export const deleteRecord = async (tableName = 'demoTable', itemKey = {}) => {
+  const command = new DeleteCommand({
     TableName: tableName,
     Key: itemKey,
     ReturnConsumedCapacity: 'TOTAL'

@@ -93,6 +93,6 @@ Resources:
     Type: AWS::Serverless::SimpleTable
     Properties:
       TableName: Session
-      PrimaryKey:           # { sessionID: '4t£f38curqjf' }
+      PrimaryKey:           # { sessionID: 'only1session' }
         Name: sessionID
         Type: String

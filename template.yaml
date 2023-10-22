@@ -86,3 +86,13 @@ Resources:
       ContentUri: './layers/common'
       CompatibleRuntimes:
         - nodejs18.x
+
+
+  ############################################################################  ->  Dynamo DBs
+  SessionTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: Session
+      PrimaryKey:           # { sessionID: '4t£f38curqjf' }
+        Name: sessionID
+        Type: String

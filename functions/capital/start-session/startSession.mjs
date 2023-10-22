@@ -1,6 +1,11 @@
 /*global fetch*/
-// import { getParameter } from '../../opt/parameterStore.mjs';
+import { getParameter } from '../../opt/parameterStore.mjs';
+import { nowTime } from "../../opt/common.mjs";
+
 // import { getParameter } from '../../../layers/aws-services/parameterStore.mjs';
+// import { nowTime } from "../../../layers/common/common.mjs";
+
+// import { nowTime } from '../../../layers/common/common.mjs';
 
 const isAWS = process.env.AWS_EXECUTION_ENV;
 const CT_IDENTIFIER = process.env.CT_IDENTIFIER;
@@ -19,14 +24,14 @@ const SESSION_ENDPOINT = process.env.SESSION_ENDPOINT;
 *                   if the session is successfully started, or an error response otherwise.
 */
 export const handler = async (event) => {
-  const { getParameter } = isAWS
-  ? await import('../../opt/parameterStore.mjs') 
-  : await import('../../../layers/aws-services/parameterStore.mjs');
-  
-  // const common = isAWS
-  // ? await import('../../opt/common.js') 
-  // : await import('../../../layers/common/common.js');
-  
+  // const { getParameter } = isAWS
+  //   ? await import('../../opt/parameterStore.mjs')
+  //   : await import('../../../layers/aws-services/parameterStore.mjs');
+
+  // const { nowTime } = isAWS
+  //   ? await import('../../opt/common.mjs')
+  //   : await import('../../../layers/common/common.mjs');
+
   // const ENDPOINT = common.SESSION_ENDPOINT;
 
   // Run the commands and retrieve parameter store values
@@ -87,10 +92,12 @@ export const doStartSession = async (
 
     const CST = response.headers.get('CST');
     const TOKEN = response.headers.get('X-SECURITY-TOKEN');
+    const TIME_LAST_ACTIVE = nowTime();
 
     return JSON.stringify({
       CST: CST,
-      TOKEN: TOKEN
+      TOKEN: TOKEN,
+      TIME_LAST_ACTIVE: TIME_LAST_ACTIVE
     })
   } catch (err) {   // TODO: Check better way of handling this error.
     // console.log(err);

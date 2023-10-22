@@ -30,6 +30,7 @@ Globals:
         CT_DEMO_URL: /cloud-trader/capitalDemoUrl       # TODO: Each user would persist as account settings in DB
         SESSION_ENDPOINT: /session
         SESSION_TABLE_NAME: Session
+        SESSION_TABLE_KEY_VALUE: only1session
 
 Resources:
   ############################################################################  ->  State Machines

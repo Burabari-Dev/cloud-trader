@@ -1,0 +1,11 @@
+{
+  "name": "save-session",
+  "version": "1.0.0",
+  "description": "Saves a capital.com session to database",
+  "main": "saveSession.mjs",
+  "scripts": {
+    "test": "mocha --recursive './**/*.test.mjs'"
+  },
+  "author": "Burabari Kpai",
+  "license": "MIT"
+}

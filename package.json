@@ -1,0 +1,21 @@
+{
+  "name": "cloud-trader",
+  "version": "1.0.0",
+  "description": "App that interfaces with capital.com api",
+  "main": "functions/capital/start-session/startSession.mjs",
+  "scripts": {
+    "pretest": "powershell ./pre-test.ps1",
+    "posttest": "powershell ./post-test.ps1",
+    "test": "mocha --recursive ./**/*.test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Burabari-Dev/cloud-trader.git"
+  },
+  "author": "Burabari Kpai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Burabari-Dev/cloud-trader/issues"
+  },
+  "homepage": "https://github.com/Burabari-Dev/cloud-trader#readme"
+}

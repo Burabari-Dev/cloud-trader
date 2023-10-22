@@ -29,6 +29,8 @@ Globals:
         CT_PASSWORD: /cloud-trader/password             # TODO: Each user would persist as account settings in DB
         CT_DEMO_URL: /cloud-trader/capitalDemoUrl       # TODO: Each user would persist as account settings in DB
         SESSION_ENDPOINT: /session
+        SESSION_TABLE_NAME: Session
+        SESSION_TABLE_KEY_VALUE: only1session
 
 Resources:
   ############################################################################  ->  State Machines
@@ -92,7 +94,7 @@ Resources:
   SessionTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
-      TableName: Session
-      PrimaryKey:           # { sessionID: '4t£f38curqjf' }
+      TableName: Session    # MUST be thesame as SESSEION_TABLE_NAME enviromnent variable above!!!
+      PrimaryKey:           # { sessionID: 'only1session' }
         Name: sessionID
         Type: String

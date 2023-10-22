@@ -1,7 +1,8 @@
 import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm';
 
+const REGION = process.env.AWS_REGION;
 // Configure the SSMClient to use eu-west-2 region
-const client = new SSMClient({ region: 'eu-west-2' });
+const client = new SSMClient({ region: REGION });
 
 
 export const getParameter = async (paramName, isWithDecryption) => {

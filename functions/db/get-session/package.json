@@ -1,0 +1,11 @@
+{
+  "name": "get-session",
+  "version": "1.0.0",
+  "description": "Gets the capital.com session object in database",
+  "main": "getDbSession.mjs",
+  "scripts": {
+    "test": "mocha --recursive ./**/*.test.mjs"
+  },
+  "author": "Burabari Kpai",
+  "license": "MIT"
+}

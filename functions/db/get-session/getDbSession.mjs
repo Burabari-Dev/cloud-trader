@@ -1,5 +1,4 @@
-import { getRecord } from "../../../layers/services-utils/dynamoDb.mjs";
-// import { getRecord } from "../../opt/dynamoDb.mjs";
+import { getRecord } from "../../opt/dynamoDb.mjs";
 
 const sessionKeyValue = process.env.SESSION_TABLE_KEY_VALUE;
 const SESSION_KEY = { sessionID: sessionKeyValue };

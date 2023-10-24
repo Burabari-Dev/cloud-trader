@@ -6,8 +6,12 @@ const SESSION_KEY = { sessionID: sessionKeyValue };
 const tableName = process.env.SESSION_TABLE_NAME;
 
 export const handler = async (event) => {
-  const session = event.session;
+  const session = {
+    CST: event.CST,
+    TOKEN: event.TOKEN,
+    TIME_LAST_ACTIVE: event.TIME_LAST_ACTIVE
+  };
   const sessionWithKey = { ...session, ...SESSION_KEY };
-  const response = await newOrReplaceRecord(tableName, sessionWithKey);
-  console.log('>>---> ', response);                                 //TODO: DELETE THIS LINE
+  await newOrReplaceRecord(tableName, sessionWithKey);
+  return session;
 }

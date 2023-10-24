@@ -9,7 +9,7 @@ export const newOrReplaceRecord = async (tableName = 'demoTable', item = {}) => 
   const command = new PutCommand({
     TableName: tableName,
     Item: item,
-    ReturnValues: 'ALL_NEW',
+    ReturnValues: 'NONE',
     ReturnConsumedCapacity: 'TOTAL'
   });
 

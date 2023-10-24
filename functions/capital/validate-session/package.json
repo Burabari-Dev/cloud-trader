@@ -1,0 +1,12 @@
+{
+  "name": "validate-session",
+  "version": "1.0.0",
+  "description": "Validates a session, if it has expired or not",
+  "main": "validateSession.mjs",
+  "type": "module",
+  "scripts": {
+    "test": "mocha --recursive './**/*.test.mjs'"
+  },
+  "author": "Burabari Kpai",
+  "license": "MIT"
+}

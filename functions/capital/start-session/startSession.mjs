@@ -2,7 +2,6 @@
 import { getParameter } from '../../opt/parameterStore.mjs';
 import { nowTime } from "../../opt/common.mjs";
 
-const isAWS = process.env.AWS_EXECUTION_ENV;
 const CT_IDENTIFIER = process.env.CT_IDENTIFIER;
 const CT_KEY = process.env.CT_KEY;
 const CT_PASSWORD = process.env.CT_PASSWORD;
@@ -14,11 +13,10 @@ const SESSION_ENDPOINT = process.env.SESSION_ENDPOINT;
  * This AWS Lambda function retrieves necessary parameters from AWS SSM Parameter Store,
  * constructs a session URL, and initiates a session with Capital.com API using the obtained credentials.
 *
-* @param {Object} event - AWS Lambda event object.
 * @returns {Object} - Returns an object containing CST (Client Session Token) and TOKEN (Security Token)
 *                   if the session is successfully started, or an error response otherwise.
 */
-export const handler = async (event) => {
+export const handler = async () => {
   // Run the commands and retrieve parameter store values
   const IDENTIFIER = await getParameter(CT_IDENTIFIER, false);
   const KEY = await getParameter(CT_KEY, true);
@@ -79,11 +77,11 @@ export const doStartSession = async (
     const TOKEN = response.headers.get('X-SECURITY-TOKEN');
     const TIME_LAST_ACTIVE = nowTime();
 
-    return JSON.stringify({
+    return {
       CST: CST,
       TOKEN: TOKEN,
       TIME_LAST_ACTIVE: TIME_LAST_ACTIVE
-    })
+    }
   } catch (err) {   // TODO: Check better way of handling this error.
     return {
       message: `

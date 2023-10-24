@@ -1,0 +1,33 @@
+Comment: >
+  Gets a session from the database if available 
+  and valid or from capital.com otherwise.
+StartAt: Get-DB-Session
+States:
+  Get-DB-Session:
+    Type: Task
+    Resource: ${GetDbSessionArn}
+    Next: Validate-Session
+  Validate-Session:             #--> TODO: Lambda function and template definition needed
+    Type: Task
+    Resource: ${ValidateSessionArn}
+    Next: Check-Session
+  Check-Session:
+    Type: Choice
+    Choices:
+      - Variable: $.isValid
+        BooleanEquals: true
+        Next: Result-State
+      - Variable: $.isValid
+        BooleanEquals: false
+        Next: Start-Session
+  Start-Session:
+    Type: Task
+    Resource: ${StartCapitalSessionArn}
+    Next: Save-Session
+  Save-Session:
+    Type: Task
+    Resource: ${SaveSessionArn}
+    Next: Result-State
+  Result-State:
+    Type: Pass
+    End: true

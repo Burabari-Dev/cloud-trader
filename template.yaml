@@ -20,8 +20,7 @@ Globals:
     Architectures:
       - x86_64
     Layers:
-      - !Ref AWSServicesLayer
-      - !Ref CommonLayer
+      - !Ref ServicesUtilsLayer
     Environment:
       Variables:
         CT_IDENTIFIER: /cloud-trader/identifier         # TODO: Each user would persist as account settings in DB
@@ -34,6 +33,40 @@ Globals:
 
 Resources:
   ############################################################################  ->  State Machines
+  GetSessionStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      DefinitionUri: state-machines/get-session.asl.yaml
+      Type: STANDARD
+      DefinitionSubstitutions:
+        StartCapitalSessionArn: !GetAtt StartCapitalSession.Arn
+        GetDbSessionArn: !GetAtt GetDbSession.Arn
+        ValidateSessionArn: !GetAtt ValidateSession.Arn
+        SaveSessionArn: !GetAtt SaveSession.Arn
+      Events:
+        GatewayTrigger:
+          Type: Api
+          Properties:
+            Path: /get-session
+            Method: GET
+            RestApiId: !Ref CloudTraderGateway
+      Policies: 
+        - LambdaInvokePolicy:
+            FunctionName: !Ref StartCapitalSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref GetDbSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref ValidateSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref SaveSession
+
+
+  ############################################################################  ->  API Gateways
+  CloudTraderGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: CloudTraderGateway
+      StageName: dev
 
 
   ############################################################################  ->  Lambda Functions
@@ -45,12 +78,41 @@ Resources:
       Handler: startSession.handler
       Policies: 
         - !Ref ReadParameterStoreValues
-      # Events:
-      #   HelloWorld:
-      #     Type: HttpApi 
-      #     Properties:
-      #       Path: /hello
-      #       Method: get
+
+  GetDbSession:
+    Type: AWS::Serverless::Function
+    Connectors:
+      ToSessionTable:
+        Properties:
+          Destination: 
+            Id: SessionTable
+          Permissions:
+            - Read
+    Properties:
+      FunctionName: GetDbSession
+      CodeUri: functions/db/get-session/
+      Handler: getDbSession.handler
+
+  ValidateSession:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ValidateSession
+      CodeUri: functions/capital/validate-session/
+      Handler: validateSession.handler
+      
+  SaveSession:
+    Type: AWS::Serverless::Function
+    Connectors:
+      ToSessionTable:
+        Properties:
+          Destination: 
+            Id: SessionTable
+          Permissions:
+            - Write
+    Properties:
+      FunctionName: SaveSession
+      CodeUri: functions/db/save-session/
+      Handler: saveSession.handler
 
 
 ############################################################################  ->  Role/Policy for Lambda fn to use
@@ -71,24 +133,14 @@ Resources:
 
 
   ############################################################################  ->  Layers
-  AWSServicesLayer:
+  ServicesUtilsLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: AWSServicesLayer
+      LayerName: ServicesUtilsLayer
       Description: All AWS services used by Cloud-Trader app.
-      ContentUri: './layers/aws-services'
+      ContentUri: './layers/services-utils'
       CompatibleRuntimes:
         - nodejs18.x
-
-  CommonLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: CommonLayer
-      Description: Shared OR Common variables and helper functions.
-      ContentUri: './layers/common'
-      CompatibleRuntimes:
-        - nodejs18.x
-
 
   ############################################################################  ->  Dynamo DBs
   SessionTable:

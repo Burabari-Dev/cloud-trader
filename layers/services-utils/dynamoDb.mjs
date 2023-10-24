@@ -9,12 +9,12 @@ export const newOrReplaceRecord = async (tableName = 'demoTable', item = {}) => 
   const command = new PutCommand({
     TableName: tableName,
     Item: item,
-    ReturnValues: 'ALL_NEW',
+    ReturnValues: 'NONE',
     ReturnConsumedCapacity: 'TOTAL'
   });
 
   const response = await docClient.send(command);
-  return response.Attributes;
+  return response;
 }
 
 export const updateRecord = async (tableName = 'demoTable', itemKey = {}, updateAttributes = {}) => {
@@ -28,7 +28,7 @@ export const updateRecord = async (tableName = 'demoTable', itemKey = {}, update
   });
 
   const response = await docClient.send(command);
-  return response.Attributes;
+  return response;
 }
 
 export const getRecord = async (tableName = 'demoTable', itemKey = {}) => {
@@ -39,7 +39,7 @@ export const getRecord = async (tableName = 'demoTable', itemKey = {}) => {
   })
 
   const response = await docClient.send(command);
-  return response.Item;
+  return response;
 }
 
 export const deleteRecord = async (tableName = 'demoTable', itemKey = {}) => {

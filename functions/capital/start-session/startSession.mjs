@@ -79,11 +79,11 @@ export const doStartSession = async (
     const TOKEN = response.headers.get('X-SECURITY-TOKEN');
     const TIME_LAST_ACTIVE = nowTime();
 
-    return JSON.stringify({
+    return {
       CST: CST,
       TOKEN: TOKEN,
       TIME_LAST_ACTIVE: TIME_LAST_ACTIVE
-    })
+    }
   } catch (err) {   // TODO: Check better way of handling this error.
     return {
       message: `

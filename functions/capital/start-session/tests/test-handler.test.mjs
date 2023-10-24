@@ -19,10 +19,9 @@ describe('doStartSession unit tests', () => {
     }));
     // -> WHEN
     const result = await doStartSession('http://endpoint.com', 'DEMO-KEY', 'name@email.com', 'abc-123-!');
-    const jsonResult = JSON.parse(result);
     // -> THEN
-    expect(jsonResult.CST).to.equal('1234567890');
-    expect(jsonResult.TOKEN).to.equal('qwertyuiopasdfghjkl');
+    expect(result.CST).to.equal('1234567890');
+    expect(result.TOKEN).to.equal('qwertyuiopasdfghjkl');
   });
 
   it('should return an error response with the Capital.com error code when the start session request fails', async () => {

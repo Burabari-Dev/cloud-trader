@@ -75,7 +75,7 @@ Resources:
   StartCapitalSession:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: StartCapitalSessionFn
+      FunctionName: StartCapitalSession
       CodeUri: functions/capital/start-session/
       Handler: startSession.handler
       Policies: 
@@ -119,7 +119,7 @@ Resources:
   GetMarketCategories:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: GetMarketCategoriesFn
+      FunctionName: GetMarketCategories
       CodeUri: functions/capital/markets/
       Handler: getMarketCategories.handler
       Policies: 

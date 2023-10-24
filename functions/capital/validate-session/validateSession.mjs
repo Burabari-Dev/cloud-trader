@@ -2,10 +2,11 @@ import { is10MinElapsed } from "../../opt/common.mjs";
 
 export const handler = async (event) => {
   const sessionRecord = event.Item;   //-> Item returned from getDbSession lambda
+  const isValid = ! is10MinElapsed(sessionRecord.TIME_LAST_ACTIVE)
 
   if (sessionRecord) {                //-> If (true) a record of session was returned from the database
     return {
-      isValid: is10MinElapsed(sessionRecord.TIME_LAST_ACTIVE),
+      isValid: isValid,
       ...sessionRecord
     };
   }

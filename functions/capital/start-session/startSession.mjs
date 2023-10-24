@@ -2,7 +2,6 @@
 import { getParameter } from '../../opt/parameterStore.mjs';
 import { nowTime } from "../../opt/common.mjs";
 
-const isAWS = process.env.AWS_EXECUTION_ENV;
 const CT_IDENTIFIER = process.env.CT_IDENTIFIER;
 const CT_KEY = process.env.CT_KEY;
 const CT_PASSWORD = process.env.CT_PASSWORD;

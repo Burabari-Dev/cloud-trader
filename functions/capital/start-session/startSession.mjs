@@ -14,11 +14,10 @@ const SESSION_ENDPOINT = process.env.SESSION_ENDPOINT;
  * This AWS Lambda function retrieves necessary parameters from AWS SSM Parameter Store,
  * constructs a session URL, and initiates a session with Capital.com API using the obtained credentials.
 *
-* @param {Object} event - AWS Lambda event object.
 * @returns {Object} - Returns an object containing CST (Client Session Token) and TOKEN (Security Token)
 *                   if the session is successfully started, or an error response otherwise.
 */
-export const handler = async (event) => {
+export const handler = async () => {
   // Run the commands and retrieve parameter store values
   const IDENTIFIER = await getParameter(CT_IDENTIFIER, false);
   const KEY = await getParameter(CT_KEY, true);

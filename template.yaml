@@ -116,6 +116,15 @@ Resources:
       CodeUri: functions/db/save-session/
       Handler: saveSession.handler
 
+  GetMarketCategories:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: GetMarketCategoriesFn
+      CodeUri: functions/capital/markets/
+      Handler: getMarketCategories.handler
+      Policies: 
+        - !Ref ReadParameterStoreValues
+
 
 ############################################################################  ->  Role/Policy for Lambda fn to use
   ReadParameterStoreValues:       #--> Using explicit Policy definition. There is no standard Connector

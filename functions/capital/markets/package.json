@@ -1,0 +1,11 @@
+{
+  "name": "markets",
+  "version": "1.0.0",
+  "description": "Functions that relate to obtaining market information from capital.com",
+  "main": "getMarketCategories.mjs",
+  "scripts": {
+    "test": "mocha --recursive './**/*.test.mjs'"
+  },
+  "author": "Burabari Kpai",
+  "license": "MIT"
+}

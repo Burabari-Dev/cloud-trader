@@ -20,8 +20,7 @@ Globals:
     Architectures:
       - x86_64
     Layers:
-      - !Ref AWSServicesLayer
-      - !Ref CommonLayer
+      - !Ref ServicesUtilsLayer
     Environment:
       Variables:
         CT_IDENTIFIER: /cloud-trader/identifier         # TODO: Each user would persist as account settings in DB

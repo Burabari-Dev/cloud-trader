@@ -134,24 +134,14 @@ Resources:
 
 
   ############################################################################  ->  Layers
-  AWSServicesLayer:
+  ServicesUtilsLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: AWSServicesLayer
+      LayerName: ServicesUtilsLayer
       Description: All AWS services used by Cloud-Trader app.
-      ContentUri: './layers/aws-services'
+      ContentUri: './layers/services-utils'
       CompatibleRuntimes:
         - nodejs18.x
-
-  CommonLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: CommonLayer
-      Description: Shared OR Common variables and helper functions.
-      ContentUri: './layers/common'
-      CompatibleRuntimes:
-        - nodejs18.x
-
 
   ############################################################################  ->  Dynamo DBs
   SessionTable:

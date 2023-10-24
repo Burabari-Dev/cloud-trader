@@ -6,8 +6,7 @@ const tableName = process.env.SESSION_TABLE_NAME;
 
 export const handler = async(event) => {
   const response = await getRecord(tableName, SESSION_KEY);
-  return response;
-  //TODO: What is the response structure of a record not found in the DB?
+  return response;  //-> Structure of return object shown below. If there is no session record, it would not contain an Item property.
 }
 
 

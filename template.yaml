@@ -92,6 +92,36 @@ Resources:
         - LambdaInvokePolicy:
             FunctionName: !Ref GetMarketCategories
 
+  GetMarketSubNodesStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      DefinitionUri: state-machines/get-market-sub-nodes.asl.yaml
+      Type: STANDARD
+      DefinitionSubstitutions:
+        StartCapitalSessionArn: !GetAtt StartCapitalSession.Arn
+        GetDbSessionArn: !GetAtt GetDbSession.Arn
+        ValidateSessionArn: !GetAtt ValidateSession.Arn
+        SaveSessionArn: !GetAtt SaveSession.Arn
+        GetMarketSubNodesArn: !GetAtt GetMarketSubNodes.Arn
+      Events:
+        GatewayTrigger:
+          Type: Api
+          Properties:
+            Path: /get-market-sub-nodes
+            Method: GET
+            RestApiId: !Ref CloudTraderGateway
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref StartCapitalSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref GetDbSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref ValidateSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref SaveSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref GetMarketSubNodes
+
   ############################################################################  ->  API Gateways
   CloudTraderGateway:
     Type: AWS::Serverless::Api
@@ -150,6 +180,15 @@ Resources:
       FunctionName: GetMarketCategories
       CodeUri: functions/capital/markets/
       Handler: getMarketCategories.handler
+      Policies:
+        - !Ref ReadParameterStoreValues
+
+  GetMarketSubNodes:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: GetMarketSubNodes
+      CodeUri: functions/capital/markets/
+      Handler: getMarketSubNodes.handler
       Policies:
         - !Ref ReadParameterStoreValues
 

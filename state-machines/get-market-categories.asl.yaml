@@ -1,0 +1,38 @@
+Comment: >
+  Gets a valid session object and uses it to get 
+  top level market categories from capital.com
+StartAt: Get-DB-Session
+States:
+  Get-DB-Session:
+    Type: Task
+    Resource: ${GetDbSessionArn}
+    Next: Validate-Session
+  Validate-Session:
+    Type: Task
+    Resource: ${ValidateSessionArn}
+    Next: Check-Session
+  Check-Session:
+    Type: Choice
+    Choices:
+      - Variable: $.isValid
+        BooleanEquals: true
+        Next: Result-State
+      - Variable: $.isValid
+        BooleanEquals: false
+        Next: Start-Session
+  Start-Session:
+    Type: Task
+    Resource: ${StartCapitalSessionArn}
+    Next: Save-Session
+  Save-Session:
+    Type: Task
+    Resource: ${SaveSessionArn}
+    Next: Get-Market-Categories
+  Get-Market-Categories:
+    Type: Task
+    Resource: ${GetMarketCategoriesArn}
+    Next: Result-State
+  Result-State:
+    Type: Pass
+    End: true
+

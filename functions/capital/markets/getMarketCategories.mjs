@@ -1,9 +1,11 @@
+/*global fetch*/
 import { getParameter } from '../../opt/parameterStore.mjs';
 
-const BASE_URL = process.env.CT_DEMO_URL;
+const CT_DEMO_URL = process.env.CT_DEMO_URL;
 const ENDPOINT = process.env.MARKET_CATEGORIES_ENDPOINT
 
 export const handler = async (event) => {
+  const BASE_URL = await getParameter(CT_DEMO_URL, false);
   const url = BASE_URL + ENDPOINT;
   const headers = {
     CST: event.CST,                       //-> CST is retrieved from the return object of GetSession state machine

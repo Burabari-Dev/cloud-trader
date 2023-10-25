@@ -7,7 +7,7 @@ States:
     Type: Task
     Resource: ${GetDbSessionArn}
     Next: Validate-Session
-  Validate-Session:             #--> TODO: Lambda function and template definition needed
+  Validate-Session:
     Type: Task
     Resource: ${ValidateSessionArn}
     Next: Check-Session

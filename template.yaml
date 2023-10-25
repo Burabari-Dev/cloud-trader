@@ -11,11 +11,11 @@ Description: >
   - /cloud-trader/identifier      -> Type STRING
   - /cloud-trader/key             -> Type SECURESTRING
   - /cloud-trader/password        -> Type SECURESTRING
-  
+
 Globals:
   Function:
     Runtime: nodejs18.x
-    Timeout: 15             # TODO: Check if reduced time between 3 to 5 seconds would be sufficient.
+    Timeout: 15 # TODO: Check if reduced time between 3 to 5 seconds would be sufficient.
     MemorySize: 128
     Architectures:
       - x86_64
@@ -23,10 +23,10 @@ Globals:
       - !Ref ServicesUtilsLayer
     Environment:
       Variables:
-        CT_IDENTIFIER: /cloud-trader/identifier         # TODO: Each user would persist as account settings in DB
-        CT_KEY: /cloud-trader/key                       # TODO: Each user would persist as account settings in DB
-        CT_PASSWORD: /cloud-trader/password             # TODO: Each user would persist as account settings in DB
-        CT_DEMO_URL: /cloud-trader/capitalDemoUrl       # TODO: Each user would persist as account settings in DB
+        CT_IDENTIFIER: /cloud-trader/identifier # TODO: Each user would persist as account settings in DB
+        CT_KEY: /cloud-trader/key # TODO: Each user would persist as account settings in DB
+        CT_PASSWORD: /cloud-trader/password # TODO: Each user would persist as account settings in DB
+        CT_DEMO_URL: /cloud-trader/capitalDemoUrl # TODO: Each user would persist as account settings in DB
         SESSION_ENDPOINT: /session
         MARKET_CATEGORIES_ENDPOINT: /marketnavigation
         SESSION_TABLE_NAME: Session
@@ -52,7 +52,7 @@ Resources:
             Path: /get-session
             Method: GET
             RestApiId: !Ref CloudTraderGateway
-      Policies: 
+      Policies:
         - LambdaInvokePolicy:
             FunctionName: !Ref StartCapitalSession
         - LambdaInvokePolicy:
@@ -62,6 +62,35 @@ Resources:
         - LambdaInvokePolicy:
             FunctionName: !Ref SaveSession
 
+  GetMarketCategoriesStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      DefinitionUri: state-machines/get-market-categories.asl.yaml
+      Type: STANDARD
+      DefinitionSubstitutions:
+        StartCapitalSessionArn: !GetAtt StartCapitalSession.Arn
+        GetDbSessionArn: !GetAtt GetDbSession.Arn
+        ValidateSessionArn: !GetAtt ValidateSession.Arn
+        SaveSessionArn: !GetAtt SaveSession.Arn
+        GetMarketCategoriesArn: !GetAtt GetMarketCategories.Arn
+      Events:
+        GatewayTrigger:
+          Type: Api
+          Properties:
+            Path: /get-top-markets
+            Method: GET
+            RestApiId: !Ref CloudTraderGateway
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref StartCapitalSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref GetDbSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref ValidateSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref SaveSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref GetMarketCategories
 
   ############################################################################  ->  API Gateways
   CloudTraderGateway:
@@ -70,7 +99,6 @@ Resources:
       Name: CloudTraderGateway
       StageName: dev
 
-
   ############################################################################  ->  Lambda Functions
   StartCapitalSession:
     Type: AWS::Serverless::Function
@@ -78,7 +106,7 @@ Resources:
       FunctionName: StartCapitalSession
       CodeUri: functions/capital/start-session/
       Handler: startSession.handler
-      Policies: 
+      Policies:
         - !Ref ReadParameterStoreValues
 
   GetDbSession:
@@ -86,7 +114,7 @@ Resources:
     Connectors:
       ToSessionTable:
         Properties:
-          Destination: 
+          Destination:
             Id: SessionTable
           Permissions:
             - Read
@@ -101,13 +129,13 @@ Resources:
       FunctionName: ValidateSession
       CodeUri: functions/capital/validate-session/
       Handler: validateSession.handler
-      
+
   SaveSession:
     Type: AWS::Serverless::Function
     Connectors:
       ToSessionTable:
         Properties:
-          Destination: 
+          Destination:
             Id: SessionTable
           Permissions:
             - Write
@@ -122,15 +150,14 @@ Resources:
       FunctionName: GetMarketCategories
       CodeUri: functions/capital/markets/
       Handler: getMarketCategories.handler
-      Policies: 
+      Policies:
         - !Ref ReadParameterStoreValues
 
-
-############################################################################  ->  Role/Policy for Lambda fn to use
-  ReadParameterStoreValues:       #--> Using explicit Policy definition. There is no standard Connector
+  ############################################################################  ->  Role/Policy for Lambda fn to use
+  ReadParameterStoreValues: #--> Using explicit Policy definition. There is no standard Connector
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      ManagedPolicyName: ReadParameterStoreValues      
+      ManagedPolicyName: ReadParameterStoreValues
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -142,6 +169,17 @@ Resources:
               # - ssm:PutParameter
             Resource: '*'
 
+  # StatesExecutionPolicy: #--> Using explicit Policy definition. There is no standard Connector
+  #   Type: AWS::IAM::ManagedPolicy
+  #   Properties:
+  #     ManagedPolicyName: StatesExecutionPolicy
+  #     PolicyDocument:
+  #       Version: '2012-10-17'
+  #       Statement:
+  #         - Effect: Allow
+  #           Action:
+  #             - states:StartExecution
+  #           Resource: '*'
 
   ############################################################################  ->  Layers
   ServicesUtilsLayer:
@@ -157,15 +195,15 @@ Resources:
   SessionTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
-      TableName: Session    # MUST be thesame as SESSEION_TABLE_NAME enviromnent variable above!!!
-      PrimaryKey:           # { sessionID: 'only1session' }
+      TableName: Session # MUST be thesame as SESSEION_TABLE_NAME enviromnent variable above!!!
+      PrimaryKey: # { sessionID: 'only1session' }
         Name: sessionID
         Type: String
-  
+
   MarketCategoriesTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
-      TableName: MarketCategories    # MUST be thesame as MARKET_CATEGORIES_TABLE_NAME enviromnent variable above!!!
-      PrimaryKey:           # { sessionID: 'only1session' }
+      TableName: MarketCategories # MUST be thesame as MARKET_CATEGORIES_TABLE_NAME enviromnent variable above!!!
+      PrimaryKey: # { sessionID: 'only1session' }
         Name: id
         Type: String

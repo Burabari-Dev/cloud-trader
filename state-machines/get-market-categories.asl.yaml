@@ -1,6 +1,6 @@
 Comment: >
-  Gets a session from the database if available 
-  and valid or from capital.com otherwise.
+  Gets a valid session object and uses it to get 
+  top level market categories from capital.com
 StartAt: Get-DB-Session
 States:
   Get-DB-Session:
@@ -27,6 +27,10 @@ States:
   Save-Session:
     Type: Task
     Resource: ${SaveSessionArn}
+    Next: Get-Market-Categories
+  Get-Market-Categories:
+    Type: Task
+    Resource: ${GetMarketCategoriesArn}
     Next: Result-State
   Result-State:
     Type: Pass

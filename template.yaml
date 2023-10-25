@@ -169,18 +169,6 @@ Resources:
               # - ssm:PutParameter
             Resource: '*'
 
-  # StatesExecutionPolicy: #--> Using explicit Policy definition. There is no standard Connector
-  #   Type: AWS::IAM::ManagedPolicy
-  #   Properties:
-  #     ManagedPolicyName: StatesExecutionPolicy
-  #     PolicyDocument:
-  #       Version: '2012-10-17'
-  #       Statement:
-  #         - Effect: Allow
-  #           Action:
-  #             - states:StartExecution
-  #           Resource: '*'
-
   ############################################################################  ->  Layers
   ServicesUtilsLayer:
     Type: AWS::Serverless::LayerVersion

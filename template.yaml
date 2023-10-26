@@ -157,6 +157,37 @@ Resources:
         - LambdaInvokePolicy:
             FunctionName: !Ref MarketDetails
 
+  SingleMarketDetailsSM:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Name:   SingleMarketDetailsSM
+      DefinitionUri: state-machines/single-market-details.asl.yaml
+      Type: STANDARD
+      DefinitionSubstitutions:
+        StartCapitalSessionArn: !GetAtt StartCapitalSession.Arn
+        GetDbSessionArn: !GetAtt GetDbSession.Arn
+        ValidateSessionArn: !GetAtt ValidateSession.Arn
+        SaveSessionArn: !GetAtt SaveSession.Arn
+        SingleMarketDetailsArn: !GetAtt SingleMarketDetails.Arn
+      Events:
+        GatewayTrigger:
+          Type: Api
+          Properties:
+            Path: /single-market-details
+            Method: GET
+            RestApiId: !Ref CloudTraderGateway
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref StartCapitalSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref GetDbSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref ValidateSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref SaveSession
+        - LambdaInvokePolicy:
+            FunctionName: !Ref SingleMarketDetails
+
   ############################################################################  ->  API Gateways
   CloudTraderGateway:
     Type: AWS::Serverless::Api
@@ -233,6 +264,15 @@ Resources:
       FunctionName: MarketDetails
       CodeUri: functions/capital/markets/
       Handler: marketDetails.handler
+      Policies:
+        - !Ref ReadParameterStoreValues
+
+  SingleMarketDetails:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: SingleMarketDetails
+      CodeUri: functions/capital/markets/
+      Handler: singleMarketDetail.handler
       Policies:
         - !Ref ReadParameterStoreValues
 

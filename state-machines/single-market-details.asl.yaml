@@ -1,0 +1,36 @@
+Comment: >
+  Gets a single market's details from capital.com
+StartAt: Get-DB-Session
+States:
+  Get-DB-Session:
+    Type: Task
+    Resource: ${GetDbSessionArn}
+    Next: Validate-Session
+  Validate-Session:
+    Type: Task
+    Resource: ${ValidateSessionArn}
+    Next: Check-Session
+  Check-Session:
+    Type: Choice
+    Choices:
+      - Variable: $.isValid
+        BooleanEquals: true
+        Next: Single-Market-Details
+      - Variable: $.isValid
+        BooleanEquals: false
+        Next: Start-Session
+  Start-Session:
+    Type: Task
+    Resource: ${StartCapitalSessionArn}
+    Next: Save-Session
+  Save-Session:
+    Type: Task
+    Resource: ${SaveSessionArn}
+    Next: Single-Market-Details
+  Single-Market-Details:
+    Type: Task
+    Resource: ${SingleMarketDetailsArn}
+    Next: Result-State
+  Result-State:
+    Type: Pass
+    End: true

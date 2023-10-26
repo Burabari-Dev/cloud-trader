@@ -35,9 +35,10 @@ Globals:
 
 Resources:
   ############################################################################  ->  State Machines
-  GetSessionStateMachine:
+  GetSessionSM:
     Type: AWS::Serverless::StateMachine
     Properties:
+      Name: GetSessionSM
       DefinitionUri: state-machines/get-session.asl.yaml
       Type: STANDARD
       DefinitionSubstitutions:
@@ -62,9 +63,10 @@ Resources:
         - LambdaInvokePolicy:
             FunctionName: !Ref SaveSession
 
-  GetMarketCategoriesStateMachine:
+  GetMarketCategoriesSM:
     Type: AWS::Serverless::StateMachine
     Properties:
+      Name: GetMarketCategoriesSM
       DefinitionUri: state-machines/get-market-categories.asl.yaml
       Type: STANDARD
       DefinitionSubstitutions:
@@ -92,9 +94,10 @@ Resources:
         - LambdaInvokePolicy:
             FunctionName: !Ref GetMarketCategories
 
-  GetMarketSubNodesStateMachine:
+  GetMarketSubNodesSM:
     Type: AWS::Serverless::StateMachine
     Properties:
+      Name: GetMarketSubNodesSM
       DefinitionUri: state-machines/get-market-sub-nodes.asl.yaml
       Type: STANDARD
       DefinitionSubstitutions:

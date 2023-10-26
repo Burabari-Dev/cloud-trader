@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 describe('doStartSession unit tests', () => {
+  const event = {};
 
   afterEach(() => {
     sinon.restore();
@@ -18,10 +19,10 @@ describe('doStartSession unit tests', () => {
       }
     }));
     // -> WHEN
-    const result = await doStartSession('http://endpoint.com', 'DEMO-KEY', 'name@email.com', 'abc-123-!');
+    const result = await doStartSession(event, 'http://endpoint.com', 'DEMO-KEY', 'name@email.com', 'abc-123-!');
     // -> THEN
-    expect(result.CST).to.equal('1234567890');
-    expect(result.TOKEN).to.equal('qwertyuiopasdfghjkl');
+    expect(result.session.CST).to.equal('1234567890');
+    expect(result.session.TOKEN).to.equal('qwertyuiopasdfghjkl');
   });
 
   it('should return an error response with the Capital.com error code when the start session request fails', async () => {
@@ -35,7 +36,7 @@ describe('doStartSession unit tests', () => {
       },
     }));
     // -> WHEN
-    const result = await doStartSession('http://endpoint.com', 'DEMO-KEY', 'name@email.com', 'abc-123-!');
+    const result = await doStartSession(event, 'http://endpoint.com', 'DEMO-KEY', 'name@email.com', 'abc-123-!');
     // -> THEN
     expect(result.message).to.include(`error.invalid.details`);
   });
@@ -44,7 +45,7 @@ describe('doStartSession unit tests', () => {
     // -> GIVEN
     sinon.stub(global, 'fetch').throws(new Error('Network error'));
     // -> WHEN
-    const result = await doStartSession('http://endpoint', 'DEMO-KEY', 'name@email.com', 'abc-123-!');
+    const result = await doStartSession(event, 'http://endpoint', 'DEMO-KEY', 'name@email.com', 'abc-123-!');
     // -> THEN
     expect(result.message).to.include('Could not fetch with the following parameters:');
     expect(result.message).to.include('DEMO-KEY');

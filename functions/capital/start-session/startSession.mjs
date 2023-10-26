@@ -16,7 +16,7 @@ const SESSION_ENDPOINT = process.env.SESSION_ENDPOINT;
 * @returns {Object} - Returns an object containing CST (Client Session Token) and TOKEN (Security Token)
 *                   if the session is successfully started, or an error response otherwise.
 */
-export const handler = async () => {
+export const handler = async (event) => {
   // Run the commands and retrieve parameter store values
   const IDENTIFIER = await getParameter(CT_IDENTIFIER, false);
   const KEY = await getParameter(CT_KEY, true);
@@ -25,7 +25,7 @@ export const handler = async () => {
 
   const url = BASE_URL + SESSION_ENDPOINT;
 
-  return doStartSession(url, KEY, IDENTIFIER, PASSWORD);
+  return doStartSession(event, url, KEY, IDENTIFIER, PASSWORD);
 }
 
 
@@ -40,6 +40,7 @@ export const handler = async () => {
  *                   if the session is successfully started, or an error response otherwise.
  */
 export const doStartSession = async (
+  event = {},
   url = "http://endpoint.com",
   KEY = "DEMO-KEY",
   IDENTIFIER = "name@email.com",
@@ -78,9 +79,12 @@ export const doStartSession = async (
     const TIME_LAST_ACTIVE = nowTime();
 
     return {
-      CST: CST,
-      TOKEN: TOKEN,
-      TIME_LAST_ACTIVE: TIME_LAST_ACTIVE
+      session: {
+        CST: CST,
+        TOKEN: TOKEN,
+        TIME_LAST_ACTIVE: TIME_LAST_ACTIVE
+      },
+      data: event.data
     }
   } catch (err) {   // TODO: Check better way of handling this error.
     return {

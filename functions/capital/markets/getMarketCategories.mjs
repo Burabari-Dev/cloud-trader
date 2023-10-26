@@ -7,9 +7,10 @@ const ENDPOINT = process.env.MARKET_CATEGORIES_ENDPOINT
 export const handler = async (event) => {
   const BASE_URL = await getParameter(CT_DEMO_URL, false);
   const url = BASE_URL + ENDPOINT;
+  const session = event.session;
   const headers = {
-    CST: event.CST,                       //-> CST is retrieved from the return object of GetSession state machine
-    'X-SECURITY-TOKEN': event.TOKEN       //-> TOKEN is retrieved from the return object of GetSession state machine
+    CST: session.CST,                       //-> CST is retrieved from the return object of GetSession state machine
+    'X-SECURITY-TOKEN': session.TOKEN       //-> TOKEN is retrieved from the return object of GetSession state machine
   }
 
   const response = await fetch(url, {

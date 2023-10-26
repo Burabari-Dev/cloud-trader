@@ -6,12 +6,11 @@ const SESSION_KEY = { sessionID: sessionKeyValue };
 const tableName = process.env.SESSION_TABLE_NAME;
 
 export const handler = async (event) => {
-  const session = {
-    CST: event.CST,
-    TOKEN: event.TOKEN,
-    TIME_LAST_ACTIVE: event.TIME_LAST_ACTIVE
-  };
+  const session = event.session;
   const sessionWithKey = { ...session, ...SESSION_KEY };
   await newOrReplaceRecord(tableName, sessionWithKey);
-  return session;
+  return {
+    session: session,
+    data: event.data
+  };
 }

@@ -6,18 +6,19 @@ const ENDPOINT = process.env.MARKET_CATEGORIES_ENDPOINT
 
 export const handler = async (event) => {
   const BASE_URL = await getParameter(CT_DEMO_URL, false);
-  const nodeId = event.nodeId;
-  const limit = event.limit;
-  const url = new URL(BASE_URL + ENDPOINT + `/${nodeId}`);
+  const session = event.session;
+  const data = event.data;
+
+  const url = new URL(BASE_URL + ENDPOINT + `/${data.nodeId}`);
   const params = new URLSearchParams();
-  if (limit)
-    params.append('limit', limit);
+  if (data.limit)
+    params.append('limit', data.limit);
 
   url.search = params.toString();
 
   const headers = {
-    CST: event.CST,                       //-> CST is retrieved from the return object of GetSession state machine
-    'X-SECURITY-TOKEN': event.TOKEN       //-> TOKEN is retrieved from the return object of GetSession state machine
+    CST: session.CST,                       //-> CST is retrieved from the return object of GetSession state machine
+    'X-SECURITY-TOKEN': session.TOKEN       //-> TOKEN is retrieved from the return object of GetSession state machine
   }
 
   const response = await fetch(url, {

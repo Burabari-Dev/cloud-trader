@@ -10,7 +10,7 @@ export const newOrReplaceRecord = async (tableName = 'demoTable', item = {}) => 
     TableName: tableName,
     Item: item,
     ReturnValues: 'NONE',
-    ReturnConsumedCapacity: 'TOTAL'
+    // ReturnConsumedCapacity: 'TOTAL'
   });
 
   const response = await docClient.send(command);
@@ -24,7 +24,7 @@ export const updateRecord = async (tableName = 'demoTable', itemKey = {}, update
     UpdateExpression: genUpdateExpression(updateAttributes),
     ExpressionAttributeValues: genExpressionAttributeValues(updateAttributes),
     ReturnValues: 'ALL_NEW',
-    ReturnConsumedCapacity: 'TOTAL'
+    // ReturnConsumedCapacity: 'TOTAL'
   });
 
   const response = await docClient.send(command);
@@ -35,7 +35,7 @@ export const getRecord = async (tableName = 'demoTable', itemKey = {}) => {
   const command = new GetCommand({
     TableName: tableName,
     Key: itemKey,
-    ReturnConsumedCapacity: 'TOTAL'
+    // ReturnConsumedCapacity: 'TOTAL'
   })
 
   const response = await docClient.send(command);
@@ -46,7 +46,7 @@ export const deleteRecord = async (tableName = 'demoTable', itemKey = {}) => {
   const command = new DeleteCommand({
     TableName: tableName,
     Key: itemKey,
-    ReturnConsumedCapacity: 'TOTAL'
+    // ReturnConsumedCapacity: 'TOTAL'
   })
 
   const response = await docClient.send(command);

@@ -4,11 +4,22 @@ const sessionKeyValue = process.env.SESSION_TABLE_KEY_VALUE;
 const SESSION_KEY = { sessionID: sessionKeyValue };
 const tableName = process.env.SESSION_TABLE_NAME;
 
-export const handler = async(event) => {
+export const handler = async (event) => {
   const response = await getRecord(tableName, SESSION_KEY);
-  return response;  //-> Structure of return object shown below. If there is no session record, it would not contain an Item property.
-}
 
+  //-> Structure of return object shown below. If there is no session record, it would not contain an Item property.
+  const sessionRecord = response.Item;
+
+  if(sessionRecord){
+    return {
+      session: { ...sessionRecord },
+      data: { ...event.data }
+    }
+  }
+  return {
+    data: { ...event.data }
+  }
+}
 
 // { // GetItemOutput
 //   Item: { // AttributeMap

@@ -29,7 +29,7 @@ States:
     Next: Market-Details
   Market-Details:
     Type: Task
-    Resource: ${GetMarketSubNodesArn}
+    Resource: ${MarketDetailsArn}
     Next: Result-State
   Result-State:
     Type: Pass

@@ -16,7 +16,7 @@ States:
     Choices:
       - Variable: $.isValid
         BooleanEquals: true
-        Next: Result-State
+        Next: Get-Market-Sub-Nodes
       - Variable: $.isValid
         BooleanEquals: false
         Next: Start-Session

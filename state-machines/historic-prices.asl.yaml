@@ -1,0 +1,36 @@
+Comment: >
+  Gets historical prices for a particular instrument from capital.com
+StartAt: Get-DB-Session
+States:
+  Get-DB-Session:
+    Type: Task
+    Resource: ${GetDbSessionArn}
+    Next: Validate-Session
+  Validate-Session:
+    Type: Task
+    Resource: ${ValidateSessionArn}
+    Next: Check-Session
+  Check-Session:
+    Type: Choice
+    Choices:
+      - Variable: $.isValid
+        BooleanEquals: true
+        Next: Historic-Prices
+      - Variable: $.isValid
+        BooleanEquals: false
+        Next: Start-Session
+  Start-Session:
+    Type: Task
+    Resource: ${StartCapitalSessionArn}
+    Next: Save-Session
+  Save-Session:
+    Type: Task
+    Resource: ${SaveSessionArn}
+    Next: Historic-Prices
+  Historic-Prices:
+    Type: Task
+    Resource: ${HistoricPricesArn}
+    Next: Result-State
+  Result-State:
+    Type: Pass
+    End: true
